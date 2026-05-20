@@ -49,7 +49,7 @@ async function sendMessage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 messages: chatHistory,
-                model: 'MiMo-V2.5-TTS-VoiceDesign'
+                model: 'mimo-v2.5'
             })
         });
 
