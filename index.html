@@ -5,78 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sakura VTuber AI</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="vtuber-container">
-        <!-- Character Panel -->
-        <div class="character-panel">
-            <div class="character-wrapper">
-                <div class="character-glow" id="charGlow"></div>
-                <img src="character.jpg" alt="Sakura" class="character-img" id="charImg">
-                <div class="speaking-indicator" id="speakingIndicator">
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
+    <div class="app">
+        <!-- Character Side -->
+        <div class="character-side">
+            <div class="char-container">
+                <img src="character.jpg" alt="Sakura" class="char-img" id="charImg">
+                <div class="char-glow" id="charGlow"></div>
+                <div class="waves" id="waves">
+                    <span></span><span></span><span></span>
                 </div>
             </div>
-            <div class="character-info">
-                <h1 class="char-name">Sakura</h1>
-                <div class="char-status">
-                    <span class="status-dot"></span>
-                    <span id="statusText">Online</span>
-                </div>
+            <div class="char-info">
+                <h1>Sakura</h1>
+                <p class="status"><span class="dot"></span> Online</p>
             </div>
-            <!-- Voice Controls -->
-            <div class="voice-controls">
-                <button class="voice-btn" id="voiceToggle" title="Toggle Voice">
-                    <span id="voiceIcon">🔊</span>
-                </button>
-                <select id="voiceSelect" class="voice-select">
-                    <option value="">Default Voice</option>
+            <div class="voice-bar">
+                <button id="voiceToggle" class="vbtn">🔊</button>
+                <select id="voiceSelect">
+                    <option value="Mia">🎀 Mia (Cute)</option>
+                    <option value="Chloe">💕 Chloe (Sweet)</option>
+                    <option value="冰糖">🍬 Bing Tang</option>
+                    <option value="茉莉">🌸 Jasmine</option>
+                    <option value="Milo">⚡ Milo</option>
+                    <option value="Dean">😎 Dean</option>
                 </select>
             </div>
         </div>
 
-        <!-- Chat Panel -->
-        <div class="chat-panel">
-            <div class="chat-header">
-                <div class="header-left">
-                    <span class="header-icon">💬</span>
-                    <h2>Chat with Sakura</h2>
-                </div>
-                <div class="header-right">
-                    <button class="btn-icon" id="clearBtn" title="Clear Chat">🗑️</button>
-                </div>
+        <!-- Chat Side -->
+        <div class="chat-side">
+            <div class="chat-top">
+                <span>💬</span>
+                <h2>Chat with Sakura</h2>
+                <button id="clearBtn" class="clear-btn">🗑️</button>
             </div>
 
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    <div class="msg-avatar">🌸</div>
-                    <div class="msg-content">
-                        <p>Konnichiwa~! 🌸 I'm Sakura, your VTuber companion! Let's chat together ne~ ✨</p>
-                    </div>
+            <div class="messages" id="chatMessages">
+                <div class="msg bot">
+                    <div class="avatar">🌸</div>
+                    <div class="bubble">Konnichiwa~! 🌸 I'm Sakura, your VTuber companion! Let's chat together ne~ ✨</div>
                 </div>
             </div>
 
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <button class="quick-btn" data-msg="Tell me about yourself">👋 Intro</button>
-                <button class="quick-btn" data-msg="What can you do?">✨ Skills</button>
-                <button class="quick-btn" data-msg="Tell me a joke">😄 Joke</button>
-                <button class="quick-btn" data-msg="Let's play a game!">🎮 Games</button>
-                <button class="quick-btn" data-msg="Sing a song for me!">🎵 Sing</button>
+            <div class="quick-bar">
+                <button data-msg="Tell me about yourself">👋 Intro</button>
+                <button data-msg="What can you do?">✨ Skills</button>
+                <button data-msg="Tell me a joke">😄 Joke</button>
+                <button data-msg="Let's play a game!">🎮 Games</button>
+                <button data-msg="Sing a song for me!">🎵 Sing</button>
             </div>
 
-            <div class="chat-input-area">
-                <input type="text" id="userInput" placeholder="Type a message to Sakura..." autocomplete="off">
-                <button class="btn-send" id="sendBtn">
-                    <svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <div class="input-bar">
+                <input type="text" id="userInput" placeholder="Type a message..." autocomplete="off">
+                <button id="sendBtn">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path fill="#fff" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                 </button>
             </div>
         </div>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>
