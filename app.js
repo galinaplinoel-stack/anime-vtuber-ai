@@ -1,4 +1,4 @@
-// Sakura VTuber AI - with Voice
+// Sakura VTuber AI - with MiMo TTS Voice
 const chatMessages = document.getElementById('chatMessages');
 const userInput = document.getElementById('userInput');
 const sendBtn = document.getElementById('sendBtn');
@@ -14,7 +14,32 @@ const voiceSelect = document.getElementById('voiceSelect');
 // State
 let voiceEnabled = true;
 let isSpeaking = false;
-let currentAudio = null;
+
+// Available MiMo TTS voices
+const VOICES = [
+    { id: 'Mia', name: 'Mia (Cute Anime)' },
+    { id: 'Chloe', name: 'Chloe (Sweet)' },
+    { id: '冰糖', name: 'Bing Tang (Icy Candy)' },
+    { id: '茉莉', name: 'Jasmine (茉莉)' },
+    { id: 'Milo', name: 'Milo (Energetic)' },
+    { id: 'Dean', name: 'Dean (Cool)' },
+    { id: '苏打', name: 'Soda (苏打)' },
+    { id: '白桦', name: 'Birch (白桦)' },
+    { id: 'mimo_default', name: 'MiMo Default' }
+];
+
+// Populate voice select
+function initVoices() {
+    voiceSelect.innerHTML = '';
+    VOICES.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.id;
+        opt.textContent = v.name;
+        if (v.id === 'Mia') opt.selected = true;
+        voiceSelect.appendChild(opt);
+    });
+}
+initVoices();
 
 // Chat history
 let chatHistory = [
@@ -34,60 +59,56 @@ Keep responses concise (2-4 sentences max) and fun! Use emojis and Japanese expr
     }
 ];
 
-// Initialize Speech Synthesis
-function initVoices() {
-    const voices = speechSynthesis.getVoices();
-    voiceSelect.innerHTML = '<option value="">Default Voice</option>';
-    
-    voices.forEach((voice, i) => {
-        const option = document.createElement('option');
-        option.value = i;
-        option.textContent = `${voice.name} (${voice.lang})`;
-        if (voice.lang.startsWith('en')) {
-            option.style.fontWeight = 'bold';
-        }
-        voiceSelect.appendChild(option);
-    });
-}
-
-speechSynthesis.onvoiceschanged = initVoices;
-initVoices();
-
 // Toggle voice
 voiceToggle.addEventListener('click', () => {
     voiceEnabled = !voiceEnabled;
     voiceIcon.textContent = voiceEnabled ? '🔊' : '🔇';
-    if (!voiceEnabled && currentAudio) {
-        speechSynthesis.cancel();
-        stopSpeaking();
-    }
+    if (!voiceEnabled) stopSpeaking();
 });
 
-// Speak text
-function speak(text) {
+// TTS API call
+async function speak(text) {
     if (!voiceEnabled || !text) return;
-    
-    // Stop any current speech
-    speechSynthesis.cancel();
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    
-    // Get selected voice
-    const voices = speechSynthesis.getVoices();
-    const selectedIndex = voiceSelect.value;
-    if (selectedIndex && voices[selectedIndex]) {
-        utterance.voice = voices[selectedIndex];
+    startSpeaking();
+
+    try {
+        const voice = voiceSelect.value || 'Mia';
+        const response = await fetch('/api/tts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, voice })
+        });
+
+        const data = await response.json();
+
+        if (data.audio) {
+            const audioBytes = atob(data.audio);
+            const audioArray = new Uint8Array(audioBytes.length);
+            for (let i = 0; i < audioBytes.length; i++) {
+                audioArray[i] = audioBytes.charCodeAt(i);
+            }
+            const blob = new Blob([audioArray], { type: 'audio/mp3' });
+            const url = URL.createObjectURL(blob);
+            const audio = new Audio(url);
+
+            audio.onended = () => {
+                stopSpeaking();
+                URL.revokeObjectURL(url);
+            };
+            audio.onerror = () => {
+                stopSpeaking();
+                URL.revokeObjectURL(url);
+            };
+
+            await audio.play();
+        } else {
+            stopSpeaking();
+            console.error('No audio data:', data);
+        }
+    } catch (error) {
+        stopSpeaking();
+        console.error('TTS Error:', error);
     }
-    
-    utterance.rate = 1.0;
-    utterance.pitch = 1.2; // Higher pitch for anime character
-    utterance.volume = 1.0;
-    
-    utterance.onstart = () => startSpeaking();
-    utterance.onend = () => stopSpeaking();
-    utterance.onerror = () => stopSpeaking();
-    
-    speechSynthesis.speak(utterance);
 }
 
 // Visual speaking effects
@@ -123,10 +144,7 @@ async function sendMessage() {
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                messages: chatHistory,
-                model: 'mimo-v2.5'
-            })
+            body: JSON.stringify({ messages: chatHistory, model: 'mimo-v2.5' })
         });
 
         const data = await response.json();
@@ -136,11 +154,9 @@ async function sendMessage() {
             const reply = data.choices[0].message.content;
             addMessage(reply, 'bot');
             chatHistory.push({ role: "assistant", content: reply });
-            // Speak the reply
             speak(reply);
         } else {
-            const errMsg = 'Gomen ne~ Something went wrong! (╥﹏╥)';
-            addMessage(errMsg, 'bot');
+            addMessage('Gomen ne~ Something went wrong! (╥﹏╥)', 'bot');
             statusText.textContent = 'Online';
         }
     } catch (error) {
@@ -190,7 +206,6 @@ function escapeHtml(text) {
 
 // Clear chat
 function clearChat() {
-    speechSynthesis.cancel();
     stopSpeaking();
     chatMessages.innerHTML = `
         <div class="message bot">
