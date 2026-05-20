@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime VTuber AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Left: Character -->
+        <div class="character-section">
+            <div class="character-frame">
+                <div class="character-art" id="character">
+                    <div class="hair"></div>
+                    <div class="face">
+                        <div class="eyes">
+                            <div class="eye left">
+                                <div class="pupil"></div>
+                            </div>
+                            <div class="eye right">
+                                <div class="pupil"></div>
+                            </div>
+                        </div>
+                        <div class="mouth" id="mouth"></div>
+                        <div class="blush left"></div>
+                        <div class="blush right"></div>
+                    </div>
+                    <div class="body">
+                        <div class="outfit"></div>
+                    </div>
+                </div>
+                <div class="name-tag">Sakura AI</div>
+                <div class="status" id="status">Online</div>
+            </div>
+        </div>
+
+        <!-- Right: Chat -->
+        <div class="chat-section">
+            <div class="chat-header">
+                <h2>💬 Chat with Sakura</h2>
+                <div class="header-actions">
+                    <button class="btn-icon" id="clearBtn" title="Clear Chat">🗑️</button>
+                </div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-content">
+                        <p>Konnichiwa~! 🌸 I'm Sakura, your AI companion! How can I help you today?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="userInput" placeholder="Type a message..." autocomplete="off">
+                <button class="btn-send" id="sendBtn">
+                    <span>Send</span>
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <button class="quick-btn" data-message="Tell me about yourself">👋 Intro</button>
+        <button class="quick-btn" data-message="What can you do?">✨ Skills</button>
+        <button class="quick-btn" data-message="Tell me a joke">😄 Joke</button>
+        <button class="quick-btn" data-message="Let's play a game">🎮 Games</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
